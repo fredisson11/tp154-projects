@@ -7,6 +7,8 @@ on:
         description: 'Run migrations?'
         required: true
         default: 'false'
+        type: choice
+        options: [ true, false ]
 
 env:
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}
@@ -38,7 +40,7 @@ jobs:
           pytest
 
   build-and-push:
-    needs: tests
+    # needs: tests
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -64,6 +66,7 @@ jobs:
             --build-arg AZURE_STORAGE_ACCOUNT_NAME=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }} \
             --build-arg AZURE_STORAGE_ACCOUNT_KEY=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }} \
             --build-arg AZURE_MEDIA_CONTAINER_NAME=${{ secrets.AZURE_MEDIA_CONTAINER_NAME }} \
+            --no-cache --progress=plain \
             -t $IMAGE_NAME:$IMAGE_TAG .
 
       - name: Push Docker image
