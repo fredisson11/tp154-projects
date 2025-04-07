@@ -37,7 +37,11 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest
+          if [ -d "tests" ] && [ "$(ls -A tests)" ]; then
+            pytest
+          else
+            echo "No tests found, skipping test step."
+          fi
 
   build-and-push:
     # needs: tests
