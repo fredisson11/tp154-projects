@@ -44,7 +44,7 @@ jobs:
           fi
 
   build-and-push:
-    # needs: tests
+    needs: tests
     runs-on: ubuntu-latest
     permissions:
       contents: read
