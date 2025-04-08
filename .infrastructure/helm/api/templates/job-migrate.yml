@@ -2,19 +2,17 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Release.Name }}-migrate
+  name: {{ .Chart.Name }}-migrate
 spec:
   template:
     spec:
       restartPolicy: Never
       containers:
-        - name: migrate
+        - name: db-migrate
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["python", "manage.py", "migrate"]
-          env:
-            {{- range $key, $val := .Values.env }}
-            - name: {{ $key }}
-              value: {{ $val | quote }}
-            {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ .Chart.Name }}-secret
 {{- end }}

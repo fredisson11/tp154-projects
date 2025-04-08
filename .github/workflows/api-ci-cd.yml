@@ -71,11 +71,11 @@ jobs:
             --build-arg AZURE_STORAGE_ACCOUNT_KEY=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }} \
             --build-arg AZURE_MEDIA_CONTAINER_NAME=${{ secrets.AZURE_MEDIA_CONTAINER_NAME }} \
             --no-cache --progress=plain \
-            -t $IMAGE_NAME:$IMAGE_TAG .
+            -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
 
       - name: Push Docker image
         run: |
-          docker push $IMAGE_NAME:$IMAGE_TAG
+          docker push ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
   deploy:
     needs: build-and-push
@@ -98,18 +98,18 @@ jobs:
 
       - name: Deploy Helm release
         run: |
-          helm upgrade --install $RELEASE_NAME $CHART_PATH \
-            --namespace $NAMESPACE \
+          helm upgrade --install ${{ env.RELEASE_NAME }} ${{ env.CHART_PATH }} \
+            --namespace ${{ env.NAMESPACE }} \
             --create-namespace \
-            --set image.repository=$IMAGE_NAME \
-            --set image.tag=$IMAGE_TAG \
-            --set env.DB_NAME=$DB_NAME \
-            --set env.DB_USER=$DB_USER \
-            --set env.DB_PASSWORD=$DB_PASSWORD \
-            --set env.DB_HOST=$DB_HOST \
-            --set env.DB_PORT=$DB_PORT \
-            --set migrations.enabled=$MIGRATIONS_ENABLED
+            --set image.repository=${{ env.IMAGE_NAME }} \
+            --set image.tag=${{ env.IMAGE_TAG }} \
+            --set env.DB_NAME=${{ secrets.DB_NAME }} \
+            --set env.DB_USER=${{ secrets.DB_USER }} \
+            --set env.DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            --set env.DB_HOST=${{ secrets.DB_HOST }} \
+            --set env.DB_PORT=${{ secrets.DB_PORT }} \
+            --set migrations.enabled=${{ env.MIGRATIONS_ENABLED }}
 
       - name: Wait for Deployment rollout
         run: |
-          kubectl rollout status deployment/$RELEASE_NAME --namespace $NAMESPACE
+          kubectl rollout status deployment/${{ env.RELEASE_NAME }} --namespace ${{ env.NAMESPACE }}
