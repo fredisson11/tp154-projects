@@ -97,6 +97,8 @@ jobs:
         uses: azure/setup-helm@v3
 
       - name: Deploy Helm release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           helm upgrade --install ${{ env.RELEASE_NAME }} ${{ env.CHART_PATH }} \
             --namespace ${{ env.NAMESPACE }} \
