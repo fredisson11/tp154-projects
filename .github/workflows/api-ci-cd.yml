@@ -14,7 +14,7 @@ env:
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}
   IMAGE_TAG: ${{ github.sha }}
   CHART_PATH: .infrastructure/helm/api
-  RELEASE_NAME: tp154-api
+  RELEASE_NAME: api
   NAMESPACE: default
   MIGRATIONS_ENABLED: ${{ inputs.run_migrations }}
   PYTHON_VERSION: '3.10'
