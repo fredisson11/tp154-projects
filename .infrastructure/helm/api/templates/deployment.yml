@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: {{ env.RELEASE_NAME }}
   labels:
     app: {{ .Chart.Name }}
 spec:
@@ -15,7 +15,7 @@ spec:
         app: {{ .Chart.Name }}
     spec:
       containers:
-        - name: {{ .Chart.Name }}
+        - name: api
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
@@ -23,4 +23,3 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ .Chart.Name }}-secret
-          

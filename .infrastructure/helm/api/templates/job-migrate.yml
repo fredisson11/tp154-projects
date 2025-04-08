@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Chart.Name }}-migrate
+  name: {{ env.RELEASE_NAME }}-migrate
 spec:
   template:
     spec:
